@@ -33,8 +33,15 @@ def end(title = "pomodoro", message = "", kde = True, bell = False) :
         import dbus
         knotify = dbus.SessionBus().get_object("org.kde.knotify", "/Notify")
         knotify.event("warning", "kde", [], title, message, [], [], 0, 0, dbus_interface="org.kde.KNotify")
+    elif message : 
+        print message
     if bell :
         print '\a'
 
-loop()
-end()
+if __name__ == "__main__" :
+    import sys
+    kde = "--noKDE" not in sys.argv 
+    bell = "--bell" in sys.argv
+    message = next( reversed(filter(lambda s: s[0]!='-',sys.argv[1:])), "")
+    loop()
+    end(message = message, kde = kde, bell = bell)
