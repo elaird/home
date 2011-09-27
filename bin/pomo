@@ -22,7 +22,7 @@ def loop(nMins = 25, sleepSec = 60, linesAbove = 60, linesBelow = 20) :
 
 '''
 
-    for minute in range(nMins, -1, -1) :
+    for minute in range(nMins, 0, -1) :
         print "\n"*linesAbove
         print tomato%("%2d"%minute)
         print "\n"*linesBelow
