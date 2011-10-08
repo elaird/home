@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-import time,optparse
+import time,optparse,os
 
 def opts() :
     parser = optparse.OptionParser("usage: %prog [options]")
-    parser.add_option("--bell",    dest = "bell",    default = False, action  = "store_true", help = "play system bell when finished")
-    parser.add_option("--noKDE",   dest = "noKde",   default = False, action  = "store_true", help = "don't notify via KDE when finished")
-    parser.add_option("--message", dest = "message", default = "",    metavar = "\"words\"",  help = "message to display when finished")
-    parser.add_option("--date",    dest = "date",    default = False, action  = "store_true", help = "print date when finished")
-    parser.add_option("--mins",    dest = "minutes", default = 25,    metavar = "N",          help = "time for N minutes (default=25)")
-    parser.add_option("--test",    dest = "test",    default = False, action  = "store_true", help = "execute 1000 times faster")
+    parser.add_option("--no-bell", dest = "noBell",  default = False, action  = "store_true",  help = "don't play system bell when finished")
+    parser.add_option("--no-KDE",  dest = "noKde",   default = False, action  = "store_true",  help = "don't notify via KDE when finished")
+    parser.add_option("--no-date", dest = "noDate",  default = False, action  = "store_true",  help = "don't print date when finished")
+    parser.add_option("--message", dest = "message", default = "",    metavar = "\"words\"",   help = "message to display when finished")
+    parser.add_option("--mins",    dest = "minutes", default = 25,    metavar = "N",           help = "time for N minutes (default=25)")
+    parser.add_option("--test",    dest = "test",    default = False, action  = "store_true",  help = "execute 1000 times faster")
     options,args = parser.parse_args()
     return options
 
@@ -41,17 +41,24 @@ def loop(nMins = 25, sleepSec = 60, linesAbove = 60, linesBelow = 20) :
 
 def end(title = "pomodoro", message = "", kde = True, bell = False, date = False) :
     if kde :
-        import dbus
-        knotify = dbus.SessionBus().get_object("org.kde.knotify", "/Notify")
-        knotify.event("warning", "kde", [], title, message, [], [], 0, 0, dbus_interface="org.kde.KNotify")
+        try:
+            import dbus
+            knotify = dbus.SessionBus().get_object("org.kde.knotify", "/Notify")
+            knotify.event("warning", "kde", [], title, message, [], [], 0, 0, dbus_interface="org.kde.KNotify")
+        except:
+            pass
     elif message :
         print message
     if bell :
+        os.system("xset b;set bell-style audible")
         print '\a'
+        os.system("xset -b;set bell-style none")
     if date :
         t = time.asctime()
         print "%s%s %s"%(t[:-4], time.tzname[1], t[-4:])
 
 options = opts()
-loop(nMins = int(options.minutes), sleepSec = 60/(1.0 if not options.test else 1000.))
-end(message = options.message, kde = not options.noKde, bell = options.bell, date = options.date)
+sleepSec = 60.0
+if options.test : sleepSec /= 1000.0
+loop(nMins = int(options.minutes), sleepSec = sleepSec)
+end(message = options.message, kde = not options.noKde, bell = not options.noBell, date = not options.noDate)
