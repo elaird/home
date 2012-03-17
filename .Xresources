@@ -1,0 +1,7 @@
+xterm*faceName: "DejaVu Sans Mono"
+xterm*faceSize: 10.0
+xterm*fullscreen: true
+xterm*metaSendsEscape: true
+xterm*background: black
+xterm*cursorColor: lightgrey
+xterm*foreground: lightgrey
