@@ -1,3 +1,6 @@
 . ~/.xmodmap
 xloadimage -onroot -center ~/.background
-exec /usr/bin/dwm
+
+while true; do
+    dwm 2> ~/.dwm.log
+done
