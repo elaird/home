@@ -1,2 +1,7 @@
 [Default Applications]
-application/pdf=zathura.desktop
+application/pdf=okular.desktop
+image/png=gwenview.desktop
+image/gif=gwenview.desktop
+image/jpeg=gwenview.desktop
+image/jpg=gwenview.desktop
+image/tiff=gwenview.desktop
