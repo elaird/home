@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import os
+
+#bash example
+'''
+svn co -N svn+ssh://svn.cern.ch/reps/tdr2
+cd tdr2
+svn update utils
+svn update -N notes
+svn update notes/SUS-10-003
+cd notes
+eval `./tdr runtime -sh`
+tdr --style pas b SUS-10-003
+'''
+
+def fields() :
+    pwd = os.environ["PWD"]
+    lst = pwd.split("/")
+    if len(lst)<1 or lst[-1]!="trunk" :
+        print 'This script must be executed from the "trunk" dir of a CMS document repository.'
+        print '[ PWD=%s ]'%pwd
+        exit()
+    return lst[-3],lst[-2],"/".join(lst[:-3]+['utils/trunk/tdr'])
+
+def style(docSubDir = "", docCoords = "") :
+    out = None
+    if docSubDir=="papers" :
+        out = "paper"
+    else :
+        if docCoords.split("-")[0]=="AN" :
+            out = "an"
+        else :
+            out = "pas"
+    return out
+    
+def command() :
+    docSubDir,docCoords,tdr = fields()
+    return "%s --style %s b %s"%(tdr, style(docSubDir, docCoords), docCoords)
+
+os.system(command())
