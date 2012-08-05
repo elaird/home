@@ -1,6 +1,6 @@
-(menu-bar-mode nil)
-(tool-bar-mode nil)
-(blink-cursor-mode nil)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(blink-cursor-mode 0)
 
 (global-font-lock-mode 1)
 (show-paren-mode 1)
