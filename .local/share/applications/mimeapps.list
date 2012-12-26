@@ -1,7 +1,7 @@
 [Default Applications]
-application/pdf=okular.desktop
-image/png=gwenview.desktop
-image/gif=gwenview.desktop
-image/jpeg=gwenview.desktop
-image/jpg=gwenview.desktop
-image/tiff=gwenview.desktop
+application/pdf=zathura.desktop
+image/png=sxiv.desktop
+image/gif=sxiv.desktop
+image/jpeg=sxiv.desktop
+image/jpg=sxiv.desktop
+image/tiff=sxiv.desktop
