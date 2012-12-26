@@ -1,6 +1,0 @@
-[Desktop Entry]
-Terminal=false
-Name=Okular
-Exec=okular %f
-Type=Application
-MimeType=application/pdf;
