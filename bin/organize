@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+from string import ascii_lowercase
+from datetime import datetime
+from optparse import OptionParser
+import os
+
+def opts() :
+    parser = OptionParser("usage: %prog [options]")
+    parser.add_option("--test",     dest = "test",     default = False, action = "store_true",   help = "test this program")
+    parser.add_option("--dir",      dest = "dir",      default = ".",   metavar = "d",           help = "specify directory (default is \".\")")
+    parser.add_option("--rename",   dest = "rename",   default = False, action = "store_true",   help = "print file names to rename directory d")
+    parser.add_option("--execute",  dest = "execute",  default = False, action = "store_true",   help = "execute the renaming shown by --rename")
+    parser.add_option("--decode",   dest = "decode",   default = False, action = "store_true",   help = "decode file names in directory d")
+    parser.add_option("--yearzero", dest = "yearzero", default = 2000,  metavar = "y", type = "int", help = "encode year y as 0")
+    options,args = parser.parse_args()
+    if options.execute and not options.rename :
+        print "To execute the renaming, use both of --rename --execute"
+        exit()
+    return options
+
+#encodes a date into ym; year and month are each one character
+def encoded(date = datetime.now(), y0 = None) :
+    m = hex(date.month).replace("0x","")
+    year = date.year-y0
+    assert year>=0,"Years below %d (%d requested) are not supported."%(y0, date.year)
+    deltaMax = 9+len(ascii_lowercase)
+    assert year<=deltaMax,"Years above %d (%d requested) are not supported."%(y0+deltaMax, date.year)
+    y = str(year) if year<10 else ascii_lowercase[year-10]
+    return y+m
+
+#decodes the above format
+def decoded(s = "", y0 = None, dummyDay = 1) :
+    yOptions = [str(i) for i in range(10)]+list(ascii_lowercase)
+    mOptions = [hex(i).replace("0x","") for i in range(1,13)]
+    if len(s)!=2 or (s[0] not in yOptions) or (s[1] not in mOptions) : return None
+    return datetime(year = y0 + yOptions.index(s[0]), month = int(s[1], base = 16), day = dummyDay)
+
+def test(y0 = None, day = 1) :
+    for year in range(2000, 2036) :
+        for month in range(1, 13) :
+            date = datetime(year, month, day)
+            enc = encoded(date, y0)
+            dec = decoded(enc, y0, day)
+            #print enc,dec
+            assert dec==date,"%s decodes to %s rather than %s"%(enc, dec, date)
+
+#decode file names within a directory
+def decodeNames(directory = "", y0 = None) :
+    l = []
+    for item in os.listdir(directory) :
+        d = decoded(item.split("_")[0], y0)
+        if d : l.append("(%4d-%02d) %s"%(d.year, d.month, item))
+
+    for item in sorted(l) :
+        print item
+
+def rename(directory = "", descMap = lambda x:"_"+x, mv = "mv -i", y0 = None, execute = False) :
+    for item in os.listdir(directory) :
+        if decoded(item[:2], y0) : continue #skip correctly formatted items
+        if item[0]=="." : continue #skip dot files
+        
+        enc = encoded(date = datetime.fromtimestamp(os.path.getmtime(item)), y0 = y0)
+        cmd = "%s %s %s"%(mv, item, enc+descMap(item))
+        print cmd
+        if execute : os.system(cmd)
+
+o = opts()
+
+if o.test :
+    test(y0 = o.yearzero)
+
+if o.decode :
+    decodeNames(o.dir, y0 = o.yearzero)
+
+if o.rename :
+    rename(directory = o.dir, y0 = o.yearzero,
+           #mv = "git mv",
+           #descMap = lambda x:"_".join([""]+x.split("_")[1:]),
+           execute = o.execute,
+           )
