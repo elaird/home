@@ -12,6 +12,9 @@ def opts() :
     parser.add_option("--rename",   dest = "rename",   default = False, action = "store_true",   help = "print file names to rename directory d")
     parser.add_option("--execute",  dest = "execute",  default = False, action = "store_true",   help = "execute the renaming shown by --rename")
     parser.add_option("--decode",   dest = "decode",   default = False, action = "store_true",   help = "decode file names in directory d")
+    parser.add_option("--git",      dest = "git",      default = False, action = "store_true",   help = "use \"git mv\" rather than \"mv -i\" when executing rename")
+    parser.add_option("--strip",    dest = "strip",    default = False, action = "store_true",   help = "strip prefix when renaming")
+    parser.add_option("--reformat", dest = "reformat", default = False, action = "store_true",   help = "rename (according to timestamp) directories which already have correctly formatted names")
 
     options,args = parser.parse_args()
     if options.execute and not options.rename :
@@ -69,27 +72,29 @@ def decodeNames(directory = "") :
     for item in sorted(l) :
         print item
 
-def rename(directory = "", descMap = lambda x:"_"+x, mv = "mv -i", execute = False) :
+def rename(directory = "", descMap = lambda x:"_"+x, mv = "mv -i", execute = False, reformat = False) :
     for item in os.listdir(directory) :
-        if decoded(item[:2]) and item[2]=="_" : continue #skip correctly formatted items
-        if item[0]=="." : continue #skip dot files
-        
+        conds = [not os.path.isdir(item), item[0]=="."] #skip non-dirs and .dirs
+        if not reformat : conds.append(decoded(item[:2]) and item[2]=="_") #skip correctly formatted dirs
+        if any(conds) : continue
+
         enc = encoded(date = datetime.fromtimestamp(os.path.getmtime(item)))
-        cmd = " ".join([mv, item, enc+descMap(item)])
+        new = enc+descMap(item)
+        if item==new : continue
+        cmd = " ".join([mv, item, new])
         print cmd
         if execute : os.system(cmd)
 
-o = opts()
-
-if o.test :
-    test()
-
-if o.decode :
-    decodeNames(o.dir)
-
-if o.rename :
-    rename(directory = o.dir,
-           #mv = "git mv",
-           #descMap = lambda x:"_".join([""]+x.split("_")[1:]),
-           execute = o.execute,
-           )
+if __name__ == "__main__":
+    o = opts()
+    if o.test :
+        test()
+    if o.decode :
+        decodeNames(o.dir)
+    if o.rename :
+        rename(directory = o.dir,
+               mv = "git mv" if o.git else "mv -i",
+               descMap = (lambda x:"_".join([""]+x.split("_")[1:])) if o.strip else (lambda x:"_"+x),
+               execute = o.execute,
+               reformat = o.reformat,
+               )
