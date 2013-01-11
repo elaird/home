@@ -15,6 +15,7 @@ def opts() :
     parser.add_option("--git",      dest = "git",      default = False, action = "store_true",   help = "use \"git mv\" rather than \"mv -i\" when executing rename")
     parser.add_option("--strip",    dest = "strip",    default = False, action = "store_true",   help = "strip prefix when renaming")
     parser.add_option("--reformat", dest = "reformat", default = False, action = "store_true",   help = "rename (according to timestamp) directories which already have correctly formatted names")
+    parser.add_option("--splitchar",dest = "splitchar",default = "_",   metavar= "c",            help = "use this character to define prefix (used by --strip)")
 
     options,args = parser.parse_args()
     if options.execute and not options.rename :
@@ -63,19 +64,19 @@ def test(day = 1) :
             assert dec==date,"%s decodes to %s rather than %s"%(enc, dec, date)
 
 #decode file names within a directory
-def decodeNames(directory = "") :
+def decodeNames(directory = "", splitchar = "_") :
     l = []
     for item in os.listdir(directory) :
-        d = decoded(item.split("_")[0])
+        d = decoded(item.split(splitchar)[0])
         if d : l.append("(%4d-%02d) %s"%(d.year, d.month, item))
 
     for item in sorted(l) :
         print item
 
-def rename(directory = "", descMap = lambda x:"_"+x, mv = "mv -i", execute = False, reformat = False) :
+def rename(directory = "", descMap = lambda x:x, mv = "mv -i", execute = False, reformat = False, splitchar = "_") :
     for item in os.listdir(directory) :
         conds = [not os.path.isdir(item), item[0]=="."] #skip non-dirs and .dirs
-        if not reformat : conds.append(decoded(item[:2]) and item[2]=="_") #skip correctly formatted dirs
+        if not reformat : conds.append(decoded(item[:2]) and item[2]==splitchar) #skip correctly formatted dirs
         if any(conds) : continue
 
         enc = encoded(date = datetime.fromtimestamp(os.path.getmtime(item)))
@@ -87,14 +88,16 @@ def rename(directory = "", descMap = lambda x:"_"+x, mv = "mv -i", execute = Fal
 
 if __name__ == "__main__":
     o = opts()
+    c = o.splitchar
     if o.test :
         test()
     if o.decode :
-        decodeNames(o.dir)
+        decodeNames(o.dir, o.splitchar)
     if o.rename :
         rename(directory = o.dir,
                mv = "git mv" if o.git else "mv -i",
-               descMap = (lambda x:"_".join([""]+x.split("_")[1:])) if o.strip else (lambda x:"_"+x),
+               descMap = (lambda x:c.join([""]+x.split(c)[1:])) if o.strip else (lambda x:c+x),
                execute = o.execute,
                reformat = o.reformat,
+               splitchar = o.splitchar,
                )
