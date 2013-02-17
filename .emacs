@@ -5,6 +5,9 @@
 (show-paren-mode 1)
 (transient-mark-mode 1)
 
+(line-number-mode 1)
+(column-number-mode 1)
+
 (normal-erase-is-backspace-mode 0)
 (global-set-key "\M-g" 'goto-line)
 
