@@ -1,21 +1,51 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
-import time,optparse,os,sys
+import time
+import optparse
+import os
+import sys
 
-def opts() :
+
+def opts():
     parser = optparse.OptionParser("usage: %prog [options]")
-    parser.add_option("--no-bell", dest = "noBell",  default = False, action  = "store_true",  help = "don't play system bell when finished")
-    parser.add_option("--notify",  dest = "notify",  default = False, action  = "store_true",  help = "notify via libnotify")
-    parser.add_option("--knotify", dest = "knotify", default = False, action  = "store_true",  help = "notify via KDE")
-    parser.add_option("--kdialog", dest = "kdialog", default = False, action  = "store_true",  help = "notify via kdialog")
-    parser.add_option("--no-date", dest = "noDate",  default = False, action  = "store_true",  help = "don't print date when finished")
-    parser.add_option("--message", dest = "message", default = "",    metavar = "\"words\"",   help = "message to display when finished")
-    parser.add_option("--mins",    dest = "minutes", default = 25,    metavar = "N",           help = "time for N minutes (default=25)")
-    parser.add_option("--test",    dest = "test",    default = False, action  = "store_true",  help = "execute 1000 times faster")
-    options,args = parser.parse_args()
+
+    parser.add_option("--no-bell", dest="noBell",
+                      default=False, action="store_true",
+                      help="don't play system bell when finished")
+
+    parser.add_option("--notify",  dest="notify",
+                      default=False, action="store_true",
+                      help="notify via libnotify")
+
+    parser.add_option("--knotify", dest="knotify",
+                      default=False, action="store_true",
+                      help="notify via KDE")
+
+    parser.add_option("--kdialog", dest="kdialog",
+                      default=False, action="store_true",
+                      help="notify via kdialog")
+
+    parser.add_option("--no-date", dest="noDate",
+                      default=False, action="store_true",
+                      help="don't print date when finished")
+
+    parser.add_option("--message", dest="message",
+                      default="", metavar="\"words\"",
+                      help="message to display when finished")
+
+    parser.add_option("--mins", dest="minutes",
+                      default=25, metavar="N",
+                      help="time for N minutes (default=25)")
+
+    parser.add_option("--test", dest="test",
+                      default=False, action="store_true",
+                      help="execute 1000 times faster")
+
+    options, args = parser.parse_args()
     return options
 
-def loop(nMins = 25, sleepSec = 60, linesAbove = 60, linesBelow = 20) :
+
+def loop(nMins=25, sleepSec=60, linesAbove=60, linesBelow=20):
     #tomato from http://members.fortunecity.com/stereogram/tomato.html
     tomato = r'''
                    ,
@@ -23,7 +53,7 @@ def loop(nMins = 25, sleepSec = 60, linesAbove = 60, linesBelow = 20) :
                  //_`\
             _.-`| \ ``._
         .-''`-.       _.'`.
-      .'      / /'\/`.\    `. 
+      .'      / /'\/`.\    `.
      /   .    |/         `.  \
     '   /                  \  ;
    :   '            \       : :
@@ -35,44 +65,52 @@ def loop(nMins = 25, sleepSec = 60, linesAbove = 60, linesBelow = 20) :
 
 '''
 
-    for minute in range(nMins, 0, -1) :
+    for minute in range(nMins, 0, -1):
         print "\n"*linesAbove
-        print tomato%("%2d"%minute)
+        print tomato % ("%2d" % minute)
         print "\n"*linesBelow
         time.sleep(sleepSec)
 
-def end(title = "pomodoro", message = "", notify = True, knotify = True, kdialog = True, bell = False, date = False) :
+
+def end(title="pomodoro", message="", notify=True, knotify=True,
+        kdialog=True, bell=False, date=False):
+
     notified = False
-    if notify :
+    if notify:
         os.system('notify-send "pomodoro" -t 2000')
         notified = True
 
-    if knotify :
+    if knotify:
         try:
             import dbus
-            knotify = dbus.SessionBus().get_object("org.kde.knotify", "/Notify")
-            knotify.event("warning", "kde", [], title, message, [], [], 0, 0, dbus_interface="org.kde.KNotify")
+            knotify = dbus.SessionBus().get_object("org.kde.knotify",
+                                                   "/Notify")
+            knotify.event("warning", "kde", [], title, message,
+                          [], [], 0, 0, dbus_interface="org.kde.KNotify")
             notified = True
         except:
             sys.excepthook(*sys.exc_info())
 
-    if kdialog :
+    if kdialog:
         os.system('kdialog --passivepopup "pomodoro"')
         notified = True
 
-    if message and not notified :
+    if message and not notified:
         print message
-    if bell :
+    if bell:
         os.system("xset b;set bell-style audible")
         print '\a'
         os.system("xset -b;set bell-style none")
-    if date :
+    if date:
         t = time.asctime()
-        print "%s%s %s"%(t[:-4], time.tzname[1], t[-4:])
+        print "%s%s %s" % (t[:-4], time.tzname[1], t[-4:])
 
 options = opts()
 sleepSec = 60.0
-if options.test : sleepSec /= 1000.0
-loop(nMins = int(options.minutes), sleepSec = sleepSec)
-end(message = options.message, notify = options.notify, knotify = options.knotify, kdialog = options.kdialog,
-    bell = not options.noBell, date = not options.noDate)
+if options.test:
+    sleepSec /= 1000.0
+
+loop(nMins=int(options.minutes), sleepSec=sleepSec)
+end(message=options.message, notify=options.notify,
+    knotify=options.knotify, kdialog=options.kdialog,
+    bell=not options.noBell, date=not options.noDate)
