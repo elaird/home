@@ -3,7 +3,7 @@ xmodmap -e "remove Lock = Caps_Lock"
 xmodmap -e "keysym Caps_Lock = Control_L"
 xmodmap -e "add Control = Control_L"
 
-#xloadimage -onroot -center ~/.background
+xloadimage -onroot -center ~/.background
 
 while true; do
     dwm 2> ~/.dwm.log
