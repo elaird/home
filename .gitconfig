@@ -1,0 +1,9 @@
+[user]
+	name = Edward Laird
+	email = elaird@gmail.com
+[color]
+	branch = auto
+	status = auto
+	diff = auto
+[credential]
+	helper = cache --timeout=3600
