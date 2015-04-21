@@ -1,14 +1,16 @@
 (menu-bar-mode 0)
+(tool-bar-mode 0)
 (blink-cursor-mode 0)
 
 (global-font-lock-mode 1)
 (show-paren-mode 1)
 (transient-mark-mode 1)
+(set-default 'truncate-lines t)
+(normal-erase-is-backspace-mode 0)
 
 (line-number-mode 1)
 (column-number-mode 1)
 
-(normal-erase-is-backspace-mode 0)
 (global-set-key "\M-g" 'goto-line)
 
 ;; custom mode bindings
