@@ -1,9 +1,9 @@
 [user]
 	name = Edward Laird
 	email = elaird@gmail.com
+        github = elaird
 [color]
 	branch = auto
 	status = auto
 	diff = auto
-[credential]
-	helper = cache --timeout=3600
+	grep = auto
