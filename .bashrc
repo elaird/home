@@ -18,3 +18,4 @@ export PS1='\[\033[01;32m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
 # export LC_ALL=C
 alias gits="git status ."
 alias root6="source ${HOME}/root/bin/thisroot.sh"
+alias emacs="emacs -nw"
