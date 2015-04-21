@@ -17,7 +17,7 @@
 (setq auto-mode-alist
       (append
        '(("\\dwm-6.0\\'"  . c-mode))
-       '(("\\st-0.4.1\\'" . c-mode))
+       '(("\\st-0.5\\'" . c-mode))
        '(("\\.ebuild\\'" . sh-mode))
        '(("\\.tex\\'" . latex-mode))
        '(("\\.h$"       . c++-mode))
