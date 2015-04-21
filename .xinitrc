@@ -1,5 +1,5 @@
 setxkbmap -option terminate:ctrl_alt_bksp
-
+xmodmap ~/.Xmodmap
 xloadimage -onroot -center ~/.background
 
 while true; do
