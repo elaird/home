@@ -6,7 +6,9 @@
 (show-paren-mode 1)
 (transient-mark-mode 1)
 (set-default 'truncate-lines t)
+
 (normal-erase-is-backspace-mode 0)
+(define-key key-translation-map [?\C-h] [?\C-?])
 
 (line-number-mode 1)
 (column-number-mode 1)
