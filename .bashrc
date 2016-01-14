@@ -22,8 +22,6 @@ alias ls="ls --color=auto"
 alias gits="git status ."
 alias root6="source ${HOME}/root/bin/thisroot.sh"
 alias emacs="emacs -nw"
-alias vi="~/.vim/plugin/vimacs/vim"
-alias vim="~/.vim/plugin/vimacs/vim"
 
 if [ -f ~/.bashrc2 ]; then
   source ~/.bashrc2
