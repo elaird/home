@@ -1,6 +1,7 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (blink-cursor-mode 0)
+(setq ring-bell-function 'ignore)
 
 (global-font-lock-mode 1)
 (show-paren-mode 1)
