@@ -7,3 +7,5 @@
 	status = auto
 	diff = auto
 	grep = auto
+[url "git@github.com:"]
+        pushInsteadOf = https://github.com/
