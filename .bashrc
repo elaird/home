@@ -20,7 +20,6 @@ export PS1='\[\033[01;32m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
 
 alias ls="ls --color=auto"
 alias gits="git status ."
-alias root6="source ${HOME}/root/bin/thisroot.sh"
 alias emacs="emacs -nw"
 
 if [ -f ~/.bashrc2 ]; then
