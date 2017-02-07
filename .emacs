@@ -2,6 +2,7 @@
 (tool-bar-mode 0)
 (blink-cursor-mode 0)
 (setq ring-bell-function 'ignore)
+(setq-default indent-tabs-mode nil)
 
 (global-font-lock-mode 1)
 (show-paren-mode 1)
@@ -19,7 +20,7 @@
 ;; custom mode bindings
 (setq auto-mode-alist
       (append
-       '(("\\dwm-6.0\\'"  . c-mode))
+       '(("\\dwm-6.1\\'"  . c-mode))
        '(("\\st-0.5\\'" . c-mode))
        '(("\\.ebuild\\'" . sh-mode))
        '(("\\.tex\\'" . latex-mode))
@@ -28,4 +29,3 @@
        ;;'(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-;;(autoload 'cmake-mode "~/cmake-mode.el" t)
