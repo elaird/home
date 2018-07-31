@@ -18,14 +18,11 @@
 (global-set-key "\M-g" 'goto-line)
 
 ;; custom mode bindings
+(require 'cmake-mode)
+
 (setq auto-mode-alist
       (append
-       '(("\\dwm-6.1\\'"  . c-mode))
-       '(("\\st-0.5\\'" . c-mode))
-       '(("\\.ebuild\\'" . sh-mode))
+       '(("\\PKGBUILD$" . sh-mode))
        '(("\\.tex\\'" . latex-mode))
        '(("\\.h$"       . c++-mode))
-       ;;'(("CMakeLists\\.txt\\'" . cmake-mode));; emacs use flag
-       ;;'(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
-
