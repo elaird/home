@@ -1,8 +1,7 @@
 #setxkbmap -option terminate:ctrl_alt_bksp
 xmodmap ~/.Xmodmap
-xloadimage -onroot -center ~/.background
+xloadimage -onroot -center ~/.backgroundx
 
 while true; do
-    $HOME/pc/usr/local/bin/dwm 2> ~/.dwm.log
-    # fluxbox
+    i3
 done
