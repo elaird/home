@@ -14,9 +14,7 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
-export PS1='\[\033[01;32m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
-# export LC_ALL=C
-# export LANG=C
+export PS1='\[\033[01;90m\]\A\[\033[01;34m\] \w \$\[\033[00m\] '
 
 alias ls="ls --color=auto"
 alias gits="git status ."
