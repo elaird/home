@@ -62,7 +62,7 @@ output * bg ~/.background fill
 
     input * {
         # xkb_layout "us"
-        xkb_options "ctrl:nocaps"
+        xkb_options "ctrl:nocaps,altwin:alt_win"
     }
 
 ### Key bindings
